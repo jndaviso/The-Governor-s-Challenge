@@ -7,8 +7,9 @@ rm(list = ls())
 #dev.off(dev.list()["RStudioGD"])
 
 #setwd("G:/My Drive/Studies/Teaching/Classes/Econ 485/2022/R")
-setwd("C:/Users/James/My Drive/R/gov_chall/The-Governor-s-Challenge")
 #setwd("E:/Google Drive/Studies/Teaching/Classes/Econ 485/2022/R")
+#setwd("C:/Users/James/My Drive/R/gov_chall/The-Governor-s-Challenge")
+setwd("G:/My Drive/University/Econ 485/R")
 
 # Packages
 library(cansim)       # Get data from StatsCan
@@ -48,6 +49,7 @@ wage <- ts_cansim("v103451670", start = date.start)
 target.d <- ts_cansim("v39079", start = date.start)    # daily target rate 
 u <- ts_cansim("v2062815", start = date.start)
 
+fredr_set_key('7b15ffc9ff456a8d5e3e579d2b04a9f8')
 wti <- ts_fred('MCOILWTICO', start = date.start) # WTI oil price
 
 # Get Monthly US GDP
@@ -115,8 +117,7 @@ date.complete.start <- min(date.complete)
 date.complete.end <- max(date.complete)
 
 data.complete <- window(data, start = c(year(date.complete.start), month(date.complete.start)), 
-                        end = c(year(date.complete.end), month(date.complete.end))
-)
+                        end = c(year(date.complete.end), month(date.complete.end)))
 
 plot(data.complete)
 any(is.na(data.complete))
@@ -182,7 +183,7 @@ varnames <- colnames(data.complete)
 # Look at unconditional Forecast
 fc.uncond <- forecast(mod.restrict, h = h)
 plot(fc.uncond, include = 60)
-
+fc.uncond
 
 ## 2.2 Create Time Series Matrix with known values
 
@@ -193,15 +194,15 @@ data.fc <- window(data, start = c(year(date.fc.start), month(date.fc.start)),
 
 ## 2.3 Fill in Paths of Conditioned on Variables (Play around with these)
 
-window(data.fc[, "TARGET"], start = c(2022, 12), end = c(2023, 4)) <-
-  c(rep(3.75, 2), rep(4, 3))
+# window(data.fc[, "TARGET"], start = c(2022, 12), end = c(2023, 4)) <-
+#  c(rep(3.75, 2), rep(4, 3))
 
-# window(data.fc[, "TARGET"], start = c(2022, 12), end = c(2023,12)) <-
-#   c(rep(3.75, 2), rep(4, 3), rep(4.25, 2), rep(4, 2), rep(3.75, 2), rep(3.5, 2))
-#  
-# window(data.fc[, "WTI"], start = c(2022, 11), end = c(2023,12)) <- 
-#   rep(90, 14)
-# 
+window(data.fc[, "TARGET"], start = c(2022, 12), end = c(2023,12)) <-
+   c(rep(3.75, 2), rep(4, 3), rep(4.25, 2), rep(4, 2), rep(3.75, 2), rep(3.5, 2))
+  
+ window(data.fc[, "WTI"], start = c(2022, 11), end = c(2023,12)) <- 
+   rep(90, 14)
+ 
 # window(data.fc[, "GDP.US"], start = c(2022, 9), end = c(2023,6)) <- 
 #   rep(c(0.02, 0.01, 0.005, 0, -0.005, -0.01, -0.015,-0.005, 0, 0.005))
 
@@ -217,6 +218,7 @@ fc <- forecast_conditional_var(mod.restrict, h, data.fc)
 ## 2.5 Plot Forecast and Overlay Imposed Values
 
 plot(fc, include = 32)
+fc
 
 autoplot(fc, colour = FALSE,  showgap = TRUE)  +
   autolayer(data.fc, color = 'red')
