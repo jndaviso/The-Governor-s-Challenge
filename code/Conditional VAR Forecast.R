@@ -56,8 +56,6 @@ url.usgdp <- "https://cdn.ihsmarkit.com/www/default/1020/US-Monthly-GDP-History-
 df.usgdp <- read.xlsx(url.usgdp, sheet = 'Data')
 gdp.us <- ts(df.usgdp$Monthly.Real.GDP.Index, start = c(1992, 1), freq = 12)
 
-
-
 # 1.2 Variable Transformations
 
 ## a) Converting daily target rate to monthly
@@ -193,17 +191,17 @@ data.fc <- window(data, start = c(year(date.fc.start), month(date.fc.start)),
 
 ## 2.3 Fill in Paths of Conditioned on Variables (Play around with these)
 
-window(data.fc[, "TARGET"], start = c(2022, 12), end = c(2023, 4)) <-
-  c(rep(3.75, 2), rep(4, 3))
+# window(data.fc[, "TARGET"], start = c(2022, 12), end = c(2023, 4)) <-
+#  c(rep(3.75, 2), rep(4, 3))
 
-# window(data.fc[, "TARGET"], start = c(2022, 12), end = c(2023,12)) <-
-#   c(rep(3.75, 2), rep(4, 3), rep(4.25, 2), rep(4, 2), rep(3.75, 2), rep(3.5, 2))
-#  
-# window(data.fc[, "WTI"], start = c(2022, 11), end = c(2023,12)) <- 
-#   rep(90, 14)
-# 
-# window(data.fc[, "GDP.US"], start = c(2022, 9), end = c(2023,6)) <- 
-#   rep(c(0.02, 0.01, 0.005, 0, -0.005, -0.01, -0.015,-0.005, 0, 0.005))
+window(data.fc[, "TARGET"], start = c(2022, 12), end = c(2023,12)) <-
+   c(rep(3.75, 2), rep(4, 3), rep(4.25, 2), rep(4, 2), rep(3.75, 2), rep(3.5, 2))
+
+window(data.fc[, "WTI"], start = c(2022, 11), end = c(2023,12)) <- 
+   rep(90, 14)
+
+window(data.fc[, "GDP.US"], start = c(2022, 9), end = c(2023,6)) <- 
+  rep(c(0.02, 0.01, 0.005, 0, -0.005, -0.01, -0.015,-0.005, 0, 0.005))
 
 
 data.fc # Check to see that your imposed values have the right scale and timing
