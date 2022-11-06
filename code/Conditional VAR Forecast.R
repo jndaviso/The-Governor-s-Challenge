@@ -6,9 +6,8 @@
 rm(list = ls())
 #dev.off(dev.list()["RStudioGD"])
 
-#setwd("G:/My Drive/Studies/Teaching/Classes/Econ 485/2022/R")
-setwd("C:/Users/James/My Drive/R/gov_chall/The-Governor-s-Challenge")
-#setwd("E:/Google Drive/Studies/Teaching/Classes/Econ 485/2022/R")
+#setwd("C:/Users/James/My Drive/R/gov_chall/The-Governor-s-Challenge")
+setwd("G:/My Drive/University/Econ 485/R")
 
 # Packages
 library(cansim)       # Get data from StatsCan
@@ -17,6 +16,7 @@ library(forecast)     # Time Series Forecasting
 library(vars)         # Vector Autoregression
 library(lubridate)    # Easy date conversions
 library(openxlsx)
+library(gdata)
 library(stringr)
 library(xts)
 library(tsbox)
@@ -48,6 +48,7 @@ wage <- ts_cansim("v103451670", start = date.start)
 target.d <- ts_cansim("v39079", start = date.start)    # daily target rate 
 u <- ts_cansim("v2062815", start = date.start)
 
+fredr_set_key('7b15ffc9ff456a8d5e3e579d2b04a9f8')
 wti <- ts_fred('MCOILWTICO', start = date.start) # WTI oil price
 
 # Get Monthly US GDP
@@ -55,6 +56,12 @@ wti <- ts_fred('MCOILWTICO', start = date.start) # WTI oil price
 url.usgdp <- "https://cdn.ihsmarkit.com/www/default/1020/US-Monthly-GDP-History-Data.xlsx"
 df.usgdp <- read.xlsx(url.usgdp, sheet = 'Data')
 gdp.us <- ts(df.usgdp$Monthly.Real.GDP.Index, start = c(1992, 1), freq = 12)
+
+# Get Monthly US GDP
+## Monthly US GDP estimates from: https://ihsmarkit.com/products/us-monthly-gdp-index.html
+url.gscpi <- "https://www.newyorkfed.org/medialibrary/research/interactives/gscpi/downloads/gscpi_data.xlsx"
+df.gscpi <- read.xls(url.gscpi, sheet = 'GSCPI Monthly Data', blank.lines.skip=TRUE)
+gscpi <- ts(df.gscpi$Monthly.Real.GDP.Index, start = c(1992, 1), freq = 12)
 
 # 1.2 Variable Transformations
 
@@ -113,8 +120,7 @@ date.complete.start <- min(date.complete)
 date.complete.end <- max(date.complete)
 
 data.complete <- window(data, start = c(year(date.complete.start), month(date.complete.start)), 
-                        end = c(year(date.complete.end), month(date.complete.end))
-)
+                        end = c(year(date.complete.end), month(date.complete.end)))
 
 plot(data.complete)
 any(is.na(data.complete))
@@ -180,7 +186,7 @@ varnames <- colnames(data.complete)
 # Look at unconditional Forecast
 fc.uncond <- forecast(mod.restrict, h = h)
 plot(fc.uncond, include = 60)
-
+fc.uncond
 
 ## 2.2 Create Time Series Matrix with known values
 
@@ -196,12 +202,21 @@ data.fc <- window(data, start = c(year(date.fc.start), month(date.fc.start)),
 
 window(data.fc[, "TARGET"], start = c(2022, 12), end = c(2023,12)) <-
    c(rep(3.75, 2), rep(4, 3), rep(4.25, 2), rep(4, 2), rep(3.75, 2), rep(3.5, 2))
+<<<<<<< HEAD
 
 window(data.fc[, "WTI"], start = c(2022, 11), end = c(2023,12)) <- 
    rep(90, 14)
 
 window(data.fc[, "GDP.US"], start = c(2022, 9), end = c(2023,6)) <- 
   rep(c(0.02, 0.01, 0.005, 0, -0.005, -0.01, -0.015,-0.005, 0, 0.005))
+=======
+  
+ window(data.fc[, "WTI"], start = c(2022, 11), end = c(2023,12)) <- 
+   rep(90, 14)
+ 
+# window(data.fc[, "GDP.US"], start = c(2022, 9), end = c(2023,6)) <- 
+#   rep(c(0.02, 0.01, 0.005, 0, -0.005, -0.01, -0.015,-0.005, 0, 0.005))
+>>>>>>> f890e72ec941e575456e8d85f0b20fd0c0b14e18
 
 
 data.fc # Check to see that your imposed values have the right scale and timing
@@ -215,6 +230,7 @@ fc <- forecast_conditional_var(mod.restrict, h, data.fc)
 ## 2.5 Plot Forecast and Overlay Imposed Values
 
 plot(fc, include = 32)
+fc
 
 autoplot(fc, colour = FALSE,  showgap = TRUE)  +
   autolayer(data.fc, color = 'red')
