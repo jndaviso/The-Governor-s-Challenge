@@ -155,7 +155,7 @@ any(is.na(data.complete))
 
 # 2.1 Lag Selection
 VARselect(data.complete, 10)
-n.lag <- 1
+n.lag <- 4
 
 mod.est <- VAR(data.complete, p = n.lag)
 
@@ -171,9 +171,9 @@ mat.coef.res[,] <- 1
 # Impose the restrictions (This is going to change with different lag length!!!)
 mat.coef.res
 mat.coef.res[c('WTI','GDP.US'), 1:5] <- 0     # 1. Lag
-#mat.coef.res[c('WTI','GDP.US'), 8:12] <- 0    # 2. Lag
-#mat.coef.res[c('WTI','GDP.US'), 15:19] <- 0   # 3. Lag
-#mat.coef.res[c('WTI','GDP.US'), 22:26] <- 0   # 3. Lag
+mat.coef.res[c('WTI','GDP.US'), 8:12] <- 0    # 2. Lag
+mat.coef.res[c('WTI','GDP.US'), 15:19] <- 0   # 3. Lag
+mat.coef.res[c('WTI','GDP.US'), 22:26] <- 0   # 3. Lag
 mat.coef.res
 # Note: We are allowing US GDP and the oil price to affect each other
 
@@ -239,8 +239,8 @@ window(data.fc[, "WTI"], start = c(2022, 11), end = c(2023,12)) <-
 # window(data.fc[, "EXP"], start = c(2022, 11), end = c(2023,12)) <- 
 #   rep(90, 14)
  
-# window(data.fc[, "GDP.US"], start = c(2022, 9), end = c(2023,6)) <- 
-#   rep(c(0.02, 0.01, 0.005, 0, -0.005, -0.01, -0.015,-0.005, 0, 0.005))
+window(data.fc[, "GDP.US"], start = c(2022, 9), end = c(2023,10)) <- 
+  rep(c(0.02, 0.01, 0.005, 0, -0.005, -0.01, -0.015,-0.005, 0, 0.005, 0.01, 0.01, 0.01, 0.01))
 #>>>>>>> 
 
 
@@ -269,3 +269,9 @@ autoplot(fc$forecast$EXP, include = 32) +
   autolayer(data.fc[,'EXP'], color = 'magenta')
 
 fc$forecast
+
+baseexpect <- data.frame(cbind(INF = fc$forecast$INF$mean, GDP = fc$forecast$GDP$mean, U = fc$forecast$U$mean,
+                               EXP = fc$forecast$EXP$mean, TARGET = fc$forecast$TARGET$mean, GDPP.US = fc$forecast$GDP.US$mean,
+                               WTI = fc$forecast$WTI$mean))
+
+                         
