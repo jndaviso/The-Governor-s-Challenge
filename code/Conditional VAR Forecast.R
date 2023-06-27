@@ -48,7 +48,7 @@ wage <- ts_cansim("v103451670", start = date.start)
 target.d <- ts_cansim("v39079", start = date.start)    # daily target rate 
 u <- ts_cansim("v2062815", start = date.start)
 
-fredr_set_key('7b15ffc9ff456a8d5e3e579d2b04a9f8')
+fredr_set_key('')
 wti <- ts_fred('MCOILWTICO', start = date.start) # WTI oil price
 
 # Get Monthly US GDP
