@@ -51,7 +51,7 @@ trgt.rt <- bank.rt - 0.25
 
 us.gdp <- ts(data.frame(read.csv(file = "data/realgdpindex_ihsmarkit.csv"))$value, start = c(1992, 01), frequency = 12) # read in csv for us monthly gdp,, no SA
 gscpi <- ts(data.frame(read.csv(file = "data/gscpi.csv"))$value, start = c(1998, 01), frequency = 12) # read in gscppi
-fredr_set_key('7eb7c5788c21aacbba171d29b877f086')
+fredr_set_key('')
 wti <- ts_fred('MCOILWTICO', start = date.start) # oil price, monthly, no SA
 
 # quarterly data
