@@ -69,7 +69,7 @@ nex <- xprts - mprts
 
 
 
-fredr_set_key('7b15ffc9ff456a8d5e3e579d2b04a9f8')
+fredr_set_key('')
 wti <- ts_fred('MCOILWTICO', start = date.start) # WTI oil price
 
 
